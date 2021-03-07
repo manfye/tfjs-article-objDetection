@@ -13,9 +13,7 @@ import {
 import './App.css'
 import MenuIcon from "@material-ui/icons/Menu";
 import { makeStyles } from "@material-ui/core/styles";
-import { blue } from "@material-ui/core/colors";
 import * as cocoSsd from "@tensorflow-models/coco-ssd";
-// import * as tf from "@tensorflow/tfjs-core";
 import * as tf from "@tensorflow/tfjs";
 // import {loadGraphModel} from '@tensorflow/tfjs-converter';
 
@@ -39,20 +37,13 @@ function App() {
   }));
   const classes = useStyles();
 
-  const url = {
-    model:
-      // "https://orangerx.b-cdn.net/model/model.json",
-
-      "https://orangerx.b-cdn.net/tfjsModel/model.json",
-  };
-  const [start, setStart] = useState(false);
+  
   const webcamRef = React.useRef(null);
 
   const [videoWidth, setVideoWidth] = useState(960);
   const [videoHeight, setVideoHeight] = useState(640);
 
 
-  const mounted = useRef(false);
   const [model, setModel] = useState();
 
  
@@ -60,17 +51,13 @@ function App() {
   
   async function loadModel() {
     try {
-
       const model = await cocoSsd.load();
       setModel(model);
-      console.log("setloadedModel")
+      console.log("setloadedModel");
     } catch (err) {
       console.log(err);
-      console.log("failed load model")
-
+      console.log("failed load model");
     }
-
-
   }
 
   
@@ -82,36 +69,32 @@ function App() {
 
 
   async function predictionFunction() {
-    const predictions = await model.detect(
-      document.getElementById("img")
-    );
- setVideoHeight(webcamRef.current.video.videoHeight);
-     setVideoWidth(webcamRef.current.video.videoWidth);
-     var cnvs = document.getElementById("myCanvas");
+    const predictions = await model.detect(document.getElementById("img"));
+    setVideoHeight(webcamRef.current.video.videoHeight);
+    setVideoWidth(webcamRef.current.video.videoWidth);
+    var cnvs = document.getElementById("myCanvas");
 
-      // cnvs.style.position = "absolute";
- 
-     var ctx = cnvs.getContext("2d");
-     ctx.clearRect(0, 0, webcamRef.current.video.videoWidth, webcamRef.current.video.videoHeight);
+    // cnvs.style.position = "absolute";
+
+    var ctx = cnvs.getContext("2d");
+    ctx.clearRect(
+      0,
+      0,
+      webcamRef.current.video.videoWidth,
+      webcamRef.current.video.videoHeight
+    );
 
     if (predictions.length > 0) {
-    
       // setPredictionData(predictions);
       console.log(predictions);
-        for (let n = 0; n < predictions.length; n++) {
+      for (let n = 0; n < predictions.length; n++) {
         // Check scores
-        console.log(n)
+        console.log(n);
         if (predictions[n].score > 0.8) {
-         
-          let bboxLeft =
-            predictions[n].bbox[0] ;
-          let bboxTop =
-            predictions[n].bbox[1] ;
-          let bboxWidth =
-            predictions[n].bbox[2];
-          let bboxHeight =
-            predictions[n].bbox[3] -
-            bboxTop;
+          let bboxLeft = predictions[n].bbox[0];
+          let bboxTop = predictions[n].bbox[1];
+          let bboxWidth = predictions[n].bbox[2];
+          let bboxHeight = predictions[n].bbox[3] - bboxTop;
 
           console.log("bboxLeft: " + bboxLeft);
           console.log("bboxTop: " + bboxTop);
@@ -130,10 +113,10 @@ function App() {
               Math.round(parseFloat(predictions[n].score) * 100) +
               "%",
             bboxLeft,
-            bboxTop 
+            bboxTop
           );
 
-          ctx.rect(bboxLeft, bboxTop , bboxWidth, bboxHeight);
+          ctx.rect(bboxLeft, bboxTop, bboxWidth, bboxHeight);
           ctx.strokeStyle = "#FF0000";
 
           ctx.lineWidth = 3;
@@ -142,13 +125,9 @@ function App() {
           console.log("detected");
         }
       }
-  
     }
-    
-  
 
     setTimeout(() => predictionFunction(), 500);
-
   }
 
 
@@ -169,7 +148,6 @@ function App() {
     height: 1080,
     width: 1920,
     maxWidth: "100vw",
-    // height: 120,
     facingMode: "environment",
   };
 
@@ -200,7 +178,7 @@ function App() {
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" className={classes.title}>
-            Pill Detection
+            Object Detection
           </Typography>
         </Toolbar>
       </AppBar>
@@ -228,41 +206,36 @@ function App() {
             flexDirection: "column",
           }}
         >
-        
-            <>
-           
-             
-              <Box mt={2} />
-              { (
-                <Button
-                  variant={"contained"}
-                  style={{
-                    color: "white",
-                    backgroundColor: "blueviolet",
-                    width: "50%",
-                    maxWidth: "250px",
-                  }}
-                  onClick={() => {
-                    predictionFunction()
-
-                  }}
-                >
-                  Start Detect
-                </Button>
-              )}
-              <Box mt={2} />{" "}
-            </>
-            <div style={{position:"absolute" ,top: "400px", zIndex:"9999"}}>  
-
-        <canvas
-          id="myCanvas"
-          width={videoWidth}
-          height={videoHeight}
-          style={{ backgroundColor: "transparent" }}
-        />
-        </div>
-        <div style={{position:"absolute" ,top: "400px"}}>  
-        {/* <img
+          <>
+            <Box mt={2} />
+            {
+              <Button
+                variant={"contained"}
+                style={{
+                  color: "white",
+                  backgroundColor: "blueviolet",
+                  width: "50%",
+                  maxWidth: "250px",
+                }}
+                onClick={() => {
+                  predictionFunction();
+                }}
+              >
+                Start Detect
+              </Button>
+            }
+            <Box mt={2} />{" "}
+          </>
+          <div style={{ position: "absolute", top: "400px", zIndex: "9999" }}>
+            <canvas
+              id="myCanvas"
+              width={videoWidth}
+              height={videoHeight}
+              style={{ backgroundColor: "transparent" }}
+            />
+          </div>
+          <div style={{ position: "absolute", top: "400px" }}>
+            {/* <img
           style={{ width: videoWidth, objectFit: "fill" }}
           id="img"
           src={imageData}
@@ -275,25 +248,19 @@ function App() {
         screenshotFormat="image/jpeg"
         videoConstraints={videoConstraints}
       /> */}
-        <Webcam
-        audio={false}
-        id="img"
-        ref={webcamRef}
-        // width={640}
-        screenshotQuality={1}
-        screenshotFormat="image/jpeg"
-        videoConstraints={videoConstraints}
-      />
-              </div>
-             
-       
+            <Webcam
+              audio={false}
+              id="img"
+              ref={webcamRef}
+              // width={640}
+              screenshotQuality={1}
+              screenshotFormat="image/jpeg"
+              videoConstraints={videoConstraints}
+            />
+          </div>
         </Grid>
-        <Grid item xs={12} md={12}>
-         
-        </Grid>
+        <Grid item xs={12} md={12}></Grid>
       </Grid>
-     
-      
     </div>
   );
 }
