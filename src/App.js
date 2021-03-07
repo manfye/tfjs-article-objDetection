@@ -46,15 +46,11 @@ function App() {
       "https://orangerx.b-cdn.net/tfjsModel/model.json",
   };
   const [start, setStart] = useState(false);
-  const [handDetected, setHandDetected] = useState(false);
   const webcamRef = React.useRef(null);
 
   const [videoWidth, setVideoWidth] = useState(960);
   const [videoHeight, setVideoHeight] = useState(640);
-  const [predictionData, setPredictionData] = useState("");
-  const [imageData, setImageData] = useState("./photo.jpg");
 
-  const [ocr, setOcr] = useState("Recognizing...");
 
   const mounted = useRef(false);
   const [model, setModel] = useState();
@@ -100,7 +96,7 @@ function App() {
 
     if (predictions.length > 0) {
     
-      setPredictionData(predictions);
+      // setPredictionData(predictions);
       console.log(predictions);
         for (let n = 0; n < predictions.length; n++) {
         // Check scores
@@ -156,27 +152,18 @@ function App() {
   }
 
 
-  useEffect(() => {
-    //prevent initial triggering
-    if (mounted.current) {
-      predictionFunction();
+  // useEffect(() => {
+  //   //prevent initial triggering
+  //   if (mounted.current) {
+  //     predictionFunction();
    
-    } else {
-      mounted.current = true;
-    }
-  }, [start]);
+  //   } else {
+  //     mounted.current = true;
+  //   }
+  // }, [start]);
 
 
 
-  useEffect(()=>{
-    //prevent initial triggering
-    if (mounted.current) {
-      // predictionFunction()
-    } else {
-      mounted.current = true;
-    }
-   
-  }, [start])
  
   const videoConstraints = {
     height: 1080,
