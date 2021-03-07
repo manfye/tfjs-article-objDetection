@@ -181,6 +181,7 @@ function App() {
   const videoConstraints = {
     height: 1080,
     width: 1920,
+    maxWidth: "100vw",
     // height: 120,
     facingMode: "environment",
   };
