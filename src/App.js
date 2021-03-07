@@ -70,8 +70,8 @@ function App() {
 
   async function predictionFunction() {
     const predictions = await model.detect(document.getElementById("img"));
-    setVideoHeight(webcamRef.current.video.videoHeight);
-    setVideoWidth(webcamRef.current.video.videoWidth);
+    // setVideoHeight(webcamRef.current.video.videoHeight);
+    // setVideoWidth(webcamRef.current.video.videoWidth);
     var cnvs = document.getElementById("myCanvas");
 
     // cnvs.style.position = "absolute";
