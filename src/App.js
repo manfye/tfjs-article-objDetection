@@ -52,7 +52,7 @@ function App() {
   const [videoWidth, setVideoWidth] = useState(960);
   const [videoHeight, setVideoHeight] = useState(640);
   const [predictionData, setPredictionData] = useState("");
-  const [imageData, setImageData] = useState("./hand.jpg");
+  const [imageData, setImageData] = useState("./photo.jpg");
 
   const [ocr, setOcr] = useState("Recognizing...");
 
@@ -112,8 +112,7 @@ function App() {
           let bboxTop =
             predictions[n].bbox[1] ;
           let bboxWidth =
-            predictions[n].bbox[2] -
-            bboxLeft;
+            predictions[n].bbox[2];
           let bboxHeight =
             predictions[n].bbox[3] -
             bboxTop;
@@ -135,10 +134,10 @@ function App() {
               Math.round(parseFloat(predictions[n].score) * 100) +
               "%",
             bboxLeft,
-            bboxTop + 70
+            bboxTop 
           );
 
-          ctx.rect(bboxLeft, bboxTop + 80, bboxWidth, bboxHeight);
+          ctx.rect(bboxLeft, bboxTop , bboxWidth, bboxHeight);
           ctx.strokeStyle = "#FF0000";
 
           ctx.lineWidth = 3;
@@ -285,23 +284,22 @@ function App() {
         />
         </div>
         <div style={{position:"absolute" ,top: "400px"}}>  
-
-           <Webcam
+        {/* <img
+          style={{ width: videoWidth, objectFit: "fill" }}
+          id="img"
+          src={imageData}
+        ></img>  */}
+        <Webcam
         audio={false}
-        id="img"
+        id="img2"
         ref={webcamRef}
         // width={640}
         screenshotQuality={1}
         screenshotFormat="image/jpeg"
         videoConstraints={videoConstraints}
       />
-       {/* <img
-          style={{ width: videoWidth, height:videoHeight, objectFit: "fill" }}
-          id="img"
-          src={imageData}
-        ></img>  */}
               </div>
-
+             
        
         </Grid>
         <Grid item xs={12} md={12}>
