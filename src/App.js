@@ -242,17 +242,7 @@ function App() {
         >
         
             <>
-              {" "}
-              <Typography
-                align="center"
-                style={{
-                  fontSize: "50px",
-                  fontWeight: "bold",
-                  fontFamily: "Roboto",
-                }}
-              >
-               {ocr}
-              </Typography>
+           
              
               <Box mt={2} />
               { (
@@ -269,7 +259,7 @@ function App() {
 
                   }}
                 >
-                  Start Game
+                  Start Detect
                 </Button>
               )}
               <Box mt={2} />{" "}
@@ -288,10 +278,18 @@ function App() {
           style={{ width: videoWidth, objectFit: "fill" }}
           id="img"
           src={imageData}
-        ></img>  */}
-        <Webcam
+        ></img>   <Webcam
         audio={false}
         id="img2"
+        ref={webcamRef}
+        // width={640}
+        screenshotQuality={1}
+        screenshotFormat="image/jpeg"
+        videoConstraints={videoConstraints}
+      /> */}
+        <Webcam
+        audio={false}
+        id="img"
         ref={webcamRef}
         // width={640}
         screenshotQuality={1}
