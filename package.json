@@ -1,0 +1,52 @@
+{
+  "name": "tfjs-react",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@material-ui/core": "^4.11.0",
+    "@material-ui/icons": "^4.9.1",
+    "@microsoft/customvision-tfjs": "^1.2.0",
+    "@tensorflow-models/coco-ssd": "^2.2.1",
+    "@tensorflow-models/handpose": "^0.0.6",
+    "@tensorflow-models/posenet": "^2.2.1",
+    "@tensorflow/tfjs": "^2.4.0",
+    "@tensorflow/tfjs-backend-webgl": "^2.7.0",
+    "@tensorflow/tfjs-converter": "^2.7.0",
+    "@tensorflow/tfjs-core": "^2.7.0",
+    "@testing-library/jest-dom": "^4.2.4",
+    "@testing-library/react": "^9.3.2",
+    "@testing-library/user-event": "^7.1.2",
+    "dat.gui": "^0.7.7",
+    "image-data-uri": "^2.0.1",
+    "jslib-html5-camera-photo": "^3.1.6",
+    "node-tesseract-ocr": "^2.0.0",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
+    "react-html5-camera-photo": "^1.5.4",
+    "react-scripts": "3.4.3",
+    "react-webcam": "^5.2.2",
+    "stats.js": "^0.17.0",
+    "tesseract.js": "2.0.0"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}
