@@ -14,15 +14,15 @@ import './App.css'
 import MenuIcon from "@material-ui/icons/Menu";
 import { makeStyles } from "@material-ui/core/styles";
 import { blue } from "@material-ui/core/colors";
-// import * as cocoSsd from "@tensorflow-models/coco-ssd";
+import * as cocoSsd from "@tensorflow-models/coco-ssd";
 // import * as tf from "@tensorflow/tfjs-core";
-// import * as tf from "@tensorflow/tfjs";
+import * as tf from "@tensorflow/tfjs";
 // import {loadGraphModel} from '@tensorflow/tfjs-converter';
 
 // import * as posenet from '@tensorflow-models/posenet';
 import Webcam from "react-webcam";
 import { createWorker,createScheduler  } from 'tesseract.js';
-import * as cvstfjs from '@microsoft/customvision-tfjs';
+// import * as cvstfjs from '@microsoft/customvision-tfjs';
 
 
 function App() {
@@ -46,67 +46,76 @@ function App() {
       "https://orangerx.b-cdn.net/tfjsModel/model.json",
   };
   const [start, setStart] = useState(false);
-  const [handDetected, setHandDetected] = useState(false)
+  const [handDetected, setHandDetected] = useState(false);
   const webcamRef = React.useRef(null);
 
-const [videoWidth, setVideoWidth ] = useState(0)
- const [videoHeight, setVideoHeight] = useState(0)
+  const [videoWidth, setVideoWidth] = useState(960);
+  const [videoHeight, setVideoHeight] = useState(640);
+  const [predictionData, setPredictionData] = useState("");
+  const [imageData, setImageData] = useState("./hand.jpg");
 
-  const [ocr, setOcr] = useState('Recognizing...');
+  const [ocr, setOcr] = useState("Recognizing...");
 
   const mounted = useRef(false);
- 
+  const [model, setModel] = useState();
+
  
 
   
+  async function loadModel() {
+    try {
 
+      const model = await cocoSsd.load();
+      setModel(model);
+      console.log("setloadedModel")
+    } catch (err) {
+      console.log(err);
+      console.log("failed load model")
+
+    }
+
+
+  }
+
+  
+  useEffect(() => {
+    tf.ready().then(() => {
+      loadModel();
+    });
+  }, []);
 
 
   async function predictionFunction() {
-    setVideoHeight(webcamRef.current.video.videoHeight);
-    setVideoWidth(webcamRef.current.video.videoWidth);
-    //testing azure vision api
-    let model = new cvstfjs.ObjectDetectionModel();
-    await model.loadModelAsync("model.json");
-    const image = document.getElementById("img");
-    console.log(model);
-    // const result = await model.executeAsync(image);
-
-    const predictions = await model.executeAsync(
+    const predictions = await model.detect(
       document.getElementById("img")
     );
+ setVideoHeight(webcamRef.current.video.videoHeight);
+     setVideoWidth(webcamRef.current.video.videoWidth);
+     var cnvs = document.getElementById("myCanvas");
 
-    console.log(videoWidth);
-    console.log(videoHeight);
-    var cnvs = document.getElementById("myCanvas");
+      // cnvs.style.position = "absolute";
+ 
+     var ctx = cnvs.getContext("2d");
+     ctx.clearRect(0, 0, webcamRef.current.video.videoWidth, webcamRef.current.video.videoHeight);
 
-    cnvs.style.position = "absolute";
-
-    var ctx = cnvs.getContext("2d");
-    ctx.clearRect(0, 0, cnvs.width, cnvs.height);
-
-    console.log(predictions);
-    if (predictions[0].length > 0) {
-      for (let n = 0; n < predictions[0].length; n++) {
+    if (predictions.length > 0) {
+    
+      setPredictionData(predictions);
+      console.log(predictions);
+        for (let n = 0; n < predictions.length; n++) {
         // Check scores
-        if (predictions[1][n] > 0.5) {
-          const p = document.createElement("p");
-          p.innerText =
-            "Pill" +
-            ": " +
-            Math.round(parseFloat(predictions[1][n]) * 100) +
-            "%";
-          console.log(predictions[0][n][0]);
-          console.log(videoWidth);
+        console.log(n)
+        if (predictions[n].score > 0.8) {
+         
           let bboxLeft =
-            predictions[0][n][0] * webcamRef.current.video.videoWidth;
+            predictions[n].bbox[0] ;
           let bboxTop =
-            predictions[0][n][1] * webcamRef.current.video.videoHeight;
+            predictions[n].bbox[1] ;
           let bboxWidth =
-            predictions[0][n][2] * webcamRef.current.video.videoWidth -
+            predictions[n].bbox[2] -
             bboxLeft;
           let bboxHeight =
-            predictions[0][n][3] * webcamRef.current.video.videoHeight -
+            predictions[n].bbox[3] -
             bboxTop;
 
           console.log("bboxLeft: " + bboxLeft);
@@ -121,9 +130,9 @@ const [videoWidth, setVideoWidth ] = useState(0)
           ctx.fillStyle = "red";
 
           ctx.fillText(
-            "Pill" +
+            predictions[n].class +
               ": " +
-              Math.round(parseFloat(predictions[1][n]) * 100) +
+              Math.round(parseFloat(predictions[n].score) * 100) +
               "%",
             bboxLeft,
             bboxTop + 70
@@ -138,9 +147,13 @@ const [videoWidth, setVideoWidth ] = useState(0)
           console.log("detected");
         }
       }
-      setTimeout(() => predictionFunction(), 500);
-
+  
     }
+    
+  
+
+    setTimeout(() => predictionFunction(), 500);
+
   }
 
 
@@ -149,7 +162,6 @@ const [videoWidth, setVideoWidth ] = useState(0)
     if (mounted.current) {
       predictionFunction();
    
-      // generateBalloon()
     } else {
       mounted.current = true;
     }
@@ -232,7 +244,6 @@ const [videoWidth, setVideoWidth ] = useState(0)
         
             <>
               {" "}
-              <Box mt={15} />
               <Typography
                 align="center"
                 style={{
@@ -264,12 +275,17 @@ const [videoWidth, setVideoWidth ] = useState(0)
               )}
               <Box mt={2} />{" "}
             </>
+            <div style={{position:"absolute" ,top: "400px", zIndex:"9999"}}>  
+
         <canvas
           id="myCanvas"
           width={videoWidth}
           height={videoHeight}
           style={{ backgroundColor: "transparent" }}
         />
+        </div>
+        <div style={{position:"absolute" ,top: "400px"}}>  
+
            <Webcam
         audio={false}
         id="img"
@@ -279,11 +295,14 @@ const [videoWidth, setVideoWidth ] = useState(0)
         screenshotFormat="image/jpeg"
         videoConstraints={videoConstraints}
       />
-        {/* <img
-          style={{ width: "100%", objectFit: "fill" }}
+       {/* <img
+          style={{ width: videoWidth, height:videoHeight, objectFit: "fill" }}
           id="img"
           src={imageData}
         ></img>  */}
+              </div>
+
+       
         </Grid>
         <Grid item xs={12} md={12}>
          
