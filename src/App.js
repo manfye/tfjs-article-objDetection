@@ -73,7 +73,8 @@ function App() {
     // setVideoHeight(webcamRef.current.video.videoHeight);
     // setVideoWidth(webcamRef.current.video.videoWidth);
     var cnvs = document.getElementById("myCanvas");
-
+    cnvs.width =  webcamRef.current.video.videoWidth;
+    cnvs.height = webcamRef.current.video.videoHeight;
     // cnvs.style.position = "absolute";
 
     var ctx = cnvs.getContext("2d");
@@ -94,7 +95,7 @@ function App() {
           let bboxLeft = predictions[n].bbox[0];
           let bboxTop = predictions[n].bbox[1];
           let bboxWidth = predictions[n].bbox[2];
-          let bboxHeight = predictions[n].bbox[3] - bboxTop;
+          let bboxHeight = predictions[n].bbox[3]; // - bboxTop;
 
           console.log("bboxLeft: " + bboxLeft);
           console.log("bboxTop: " + bboxTop);
